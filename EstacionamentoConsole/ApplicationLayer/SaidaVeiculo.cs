@@ -18,6 +18,10 @@ namespace EstacionamentoConsole.ApplicationLayer
         public void RegistrarSaida(SaidaVeiculoDTO saidaVeiculoDTO)
         {
 
+            if (string.IsNullOrEmpty(saidaVeiculoDTO.Placa))
+                throw new ArgumentException("A placa é obrigatória e não pode ser vazia.");
+            
+
             _estacionamentoService.RegistrarSaidaVeiculo(saidaVeiculoDTO.Placa);
         }
     }

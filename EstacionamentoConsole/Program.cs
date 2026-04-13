@@ -4,7 +4,7 @@ using EstacionamentoConsole.Models;
 using EstacionamentoConsole.Models.DTOs;
 using EstacionamentoConsole.Models.Services;
 
-class Program
+public class Program
 {
     static void Main()
     {
@@ -16,9 +16,19 @@ class Program
 
         var saidaVeiculo = new SaidaVeiculo(estacionamentoService);
 
+        ExecutarMenu(estacionamento, estacionamentoService, entradaVeiculo, saidaVeiculo);
+    }
+
+    public static void ExecutarMenu(
+        Estacionamento estacionamento,
+        EstacionamentoService estacionamentoService,
+        EntradaVeiculo entradaVeiculo,
+        SaidaVeiculo saidaVeiculo)
+    {
         while (true)
         {
-            Console.Clear();
+            if (!Console.IsOutputRedirected)
+                Console.Clear();
 
             Console.WriteLine($"Vagas disponíveis - Carros: {estacionamento.VagasDisponiveisParaCarro()}");
             Console.WriteLine($"Vagas disponíveis - Motos: {estacionamento.VagasDisponiveisParaMoto()}");
@@ -30,6 +40,7 @@ class Program
             Console.WriteLine("3 - Listar Veiculos");
             Console.WriteLine("0 - Sair");
             Console.Write("Opção: ");
+
             var opcao = Console.ReadLine();
 
             if (opcao == "0")
@@ -37,14 +48,12 @@ class Program
 
             if (opcao == "1")
             {
-
                 Console.Write("Tipo do veículo (carro/moto): ");
                 var tipo = Console.ReadLine()?.Trim().ToLower();
 
                 if (tipo != "carro" && tipo != "moto")
                 {
-                    Console.WriteLine("Tipo inválido. Pressione qualquer tecla para continuar...");
-                    Console.ReadKey();
+                    Console.WriteLine("Tipo inválido.");
                     continue;
                 }
 
@@ -60,7 +69,7 @@ class Program
                 Console.Write("Cor: ");
                 var cor = Console.ReadLine()?.Trim();
 
-                var dto = new EntradaVeiculoDTO(tipo, placa, marca, modelo, cor);
+                var dto = new EntradaVeiculoDTO(tipo!, placa!, marca!, modelo!, cor!);
 
                 try
                 {
@@ -69,6 +78,7 @@ class Program
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Erro ao registrar entrada: {ex.Message}");
+                    throw ex;
                 }
             }
             else if (opcao == "2")
@@ -78,30 +88,28 @@ class Program
 
                 try
                 {
-                    saidaVeiculo.RegistrarSaida(new EstacionamentoConsole.Models.DTOs.SaidaVeiculoDTO { Placa = placa});
+                    saidaVeiculo.RegistrarSaida(new SaidaVeiculoDTO { Placa = placa! });
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Erro ao registrar saída: {ex.Message}");
+                    throw ex;
                 }
             }
             else if (opcao == "3")
             {
                 var veiculos = estacionamentoService.ListarVeiculosEstacionados();
                 Console.WriteLine("Veículos Estacionados:");
+
                 foreach (var (tipo, veiculo) in veiculos)
                 {
                     Console.WriteLine($"{tipo}: {veiculo.Placa} - {veiculo.Marca} {veiculo.Modelo} - {veiculo.Cor}");
                 }
-                Console.ReadKey();
             }
             else
             {
                 Console.WriteLine("Opção inválida.");
             }
-
-            Console.WriteLine("Pressione qualquer tecla para continuar...");
-            Console.ReadKey();
         }
     }
 }
