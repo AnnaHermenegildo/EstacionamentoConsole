@@ -104,3 +104,4 @@ C:\Projeto\Estacionamento.Tests\obj\Debug\net9.0\refint\Estacionamento.Tests.dll
 C:\Projeto\Estacionamento.Tests\obj\Debug\net9.0\Estacionamento.Tests.pdb
 C:\Projeto\Estacionamento.Tests\obj\Debug\net9.0\Estacionamento.Tests.genruntimeconfig.cache
 C:\Projeto\Estacionamento.Tests\obj\Debug\net9.0\ref\Estacionamento.Tests.dll
+C:\Projeto\Estacionamento.Tests\obj\Debug\net9.0\Estacionamento.Tests.sourcelink.json
