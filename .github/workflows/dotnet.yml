@@ -1,29 +1,40 @@
-name: .NET CI
+name: .NET CI/CD
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
-  build-and-test:
+  build-test-docker:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do codigo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      - name: Restaurar dependencias
+      - name: Restore
         run: dotnet restore EstacionamentoConsole.sln
 
-      - name: Compilar solucao
-        run: dotnet build EstacionamentoConsole.sln --configuration Release --no-restore
+      - name: Build
+        run: dotnet build EstacionamentoConsole.sln --no-restore
 
-      - name: Executar testes
-        run: dotnet test Estacionamento.Tests/Estacionamento.Tests.csproj --configuration Release --no-build --verbosity normal
+      - name: Test
+        run: dotnet test Estacionamento.Tests/Estacionamento.Tests.csproj --no-build
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: annahermenegildo
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: annahermenegildo/estacionamentoconsole:latest
